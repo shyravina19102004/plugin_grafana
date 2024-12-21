@@ -1,0 +1,10 @@
+columns format version: 1
+8 columns:
+`unit_id` UInt16
+`unit_name` String
+`site_id` UInt8
+`rtdb_type` String
+`language` String
+`unit_regex` String
+`unit_abr` String
+`unit_abr_eng` String

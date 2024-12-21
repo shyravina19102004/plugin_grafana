@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  grafana:
+    container_name: 'oksanallc-oksana-datasource'
+    build:
+      context: ./.config
+      args:
+        grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
+        grafana_version: ${GRAFANA_VERSION:-11.3.2}
+        development: ${DEVELOPMENT:-false}
+    ports:
+      - 3011:3000/tcp
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/oksanallc-oksana-datasource:Z
+      - ./provisioning:/etc/grafana/provisioning
+      - .:/root/oksanallc-oksana-datasource
+      - /home/ubunto/grafana-plugins:/var/lib/grafana/plugins
+    environment:
+      NODE_ENV: development
+      GF_LOG_FILTERS: plugin.oksanallc-oksana-datasource:debug
+      GF_LOG_LEVEL: debug
+      GF_DATAPROXY_LOGGING: 1
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: oksanallc-oksana-datasource
+    depends_on:
+      - postgres
+      - clickhouse
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: grafana
+      POSTGRES_PASSWORD: grafana
+      POSTGRES_DB: grafana
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "grafana"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  clickhouse:
+    image: yandex/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8125:8123"
+      - "9001:9000"
+    volumes:
+      - ./clickhouse_data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

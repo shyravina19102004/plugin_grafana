@@ -1,0 +1,10 @@
+columns format version: 1
+8 columns:
+`site_id` Int16
+`sensor_name_original` String
+`sensor_name_clickhouse` String
+`description` Nullable(String)
+`measure` Nullable(String)
+`value_max` Nullable(Decimal(27, 7))
+`value_min` Nullable(Decimal(27, 7))
+`properties_json` Nullable(String)

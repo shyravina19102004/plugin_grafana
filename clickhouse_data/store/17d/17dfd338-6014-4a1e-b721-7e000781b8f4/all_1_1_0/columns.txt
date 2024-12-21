@@ -1,0 +1,6 @@
+columns format version: 1
+4 columns:
+`site_id` UInt8
+`site_name` String
+`time_zone` String
+`site_abr_eng` String

@@ -1,0 +1,7 @@
+columns format version: 1
+5 columns:
+`unit_id` UInt16
+`sensor_name` String
+`date_time_utc` DateTime('UTC')
+`indication` Decimal(18, 7)
+`confidence` Int8
